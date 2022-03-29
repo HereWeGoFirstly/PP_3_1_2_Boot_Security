@@ -8,6 +8,7 @@ import ru.kata.spring.boot_security.demo.model.User;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 
@@ -23,9 +24,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    @SuppressWarnings(value = "unchecked")
     public List<User> listUsers() {
-        Query query = entityManager.createQuery("from User");
+        TypedQuery<User> query = entityManager.createQuery("from User", User.class);
         return query.getResultList();
     }
 

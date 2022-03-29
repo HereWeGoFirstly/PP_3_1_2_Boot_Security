@@ -1,15 +1,14 @@
 package ru.kata.spring.boot_security.demo.model;
 
-import lombok.Data;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Entity
 @Table(name = "authorities")
 public class Role implements GrantedAuthority {
@@ -27,9 +26,6 @@ public class Role implements GrantedAuthority {
         return role;
     }
 
-    public Role() {
-    }
-
     public Role(String role) {
         this.role = role;
     }
@@ -37,5 +33,18 @@ public class Role implements GrantedAuthority {
     @Override
     public String toString() {
         return role.replace("ROLE_", "");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Role role1 = (Role) o;
+        return id == role1.id && Objects.equals(role, role1.role);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, role);
     }
 }

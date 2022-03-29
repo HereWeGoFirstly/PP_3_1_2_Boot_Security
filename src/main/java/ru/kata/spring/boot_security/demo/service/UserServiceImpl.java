@@ -1,15 +1,20 @@
 package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service("userServiceImpl")
 public class UserServiceImpl implements UserService, UserDetailsService {
@@ -27,12 +32,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userDao.add(user);
     }
 
-    @Transactional(readOnly = true)
-    @Override
-    public List<User> listUsers() {
-        return userDao.listUsers();
-    }
-
     @Transactional
     @Override
     public void deleteById(int id) {
@@ -47,20 +46,28 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Transactional
     @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = getUserByUsername(username);
+        if (user == null) throw new UsernameNotFoundException(username);
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
+    }
+
+    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
+        return roles.stream().map(r -> new SimpleGrantedAuthority(r.getRole())).collect(Collectors.toList());
+    }
+
+    @Override
     public User getUserById(int id) {
         return userDao.getUserById(id);
     }
 
-    @Transactional
     @Override
-    public User getUserByUsername(String username) {
-        return userDao.getUserByUsername(username);
+    public List<User> listUsers() {
+        return userDao.listUsers();
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = getUserByUsername(username);
-        if (user == null) throw new UsernameNotFoundException(username);
-        return user;
+    public User getUserByUsername(String username) {
+        return userDao.getUserByUsername(username);
     }
 }
