@@ -20,6 +20,13 @@ public class RoleDaoImpl implements RoleDao {
     @Override
     public Set<Role> setOfRoles() {
         TypedQuery<Role> query = entityManager.createQuery("from Role", Role.class);
-        return new HashSet<Role>(query.getResultList());
+        return new HashSet<>(query.getResultList());
+    }
+
+    @Override
+    public Role getRole(String role) {
+        TypedQuery<Role> query = entityManager.createQuery("from Role where authority = :authority", Role.class);
+        query.setParameter("authority", role);
+        return query.getSingleResult();
     }
 }

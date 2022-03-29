@@ -1,8 +1,7 @@
 package ru.kata.spring.boot_security.demo.model;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -49,6 +48,15 @@ public class User implements UserDetails {
             roles = new HashSet<>();
         }
         roles.add(role);
+    }
+
+    public boolean hasRole(String s) {
+        for (Role role : roles) {
+            if (role.getRole().equals(s)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -102,10 +110,11 @@ public class User implements UserDetails {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" +
-                "id = " + id + ", " +
-                "name = " + name + ", " +
-                "surname = " + surname + ", " +
-                "password = " + password + ")";
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", roles=" + roles +
+                '}';
     }
 }

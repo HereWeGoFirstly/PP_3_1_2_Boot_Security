@@ -53,11 +53,9 @@ public class AdminController {
     @PostMapping("/admin")
     public String create(@ModelAttribute("user") User user
             , @RequestParam Map<String, String> form) {
-        Set<Role> roleSet = roleService.setOfRoles();
-        Set<String> stringRoleSet = form.keySet();
-        for (Role role : roleSet) {
-            if (stringRoleSet.contains(role.getRole())) {
-                user.addRole(role);
+        for (String role : form.keySet()) {
+            if (role.contains("ROLE_")) {
+                user.addRole(roleService.getRole(role));
             }
         }
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
@@ -76,11 +74,9 @@ public class AdminController {
     public String update(@ModelAttribute("user") User user
             , @PathVariable("id") int id
             , @RequestParam Map<String, String> form) {
-        Set<Role> roleSet = roleService.setOfRoles();
-        Set<String> stringRoleSet = form.keySet();
-        for (Role role : roleSet) {
-            if (stringRoleSet.contains(role.getRole())) {
-                user.addRole(role);
+        for (String role : form.keySet()) {
+            if (role.contains("ROLE_")) {
+                user.addRole(roleService.getRole(role));
             }
         }
         userService.update(id, user);
