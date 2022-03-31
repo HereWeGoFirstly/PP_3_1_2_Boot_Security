@@ -3,31 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <title>Create New User</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+          integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+
+    <style>
+        .left {
+            background-color: #41474c;
+        }
+
+        .right {
+            background-color: #41474c;
+        }
+
+        .main-table {
+            background-color: #f8f9fa;
+            min-height: 100vh;
+        }
+
+        caption {
+
+            caption-side: top;
+            background-color: #f7f7f7;
+            color: black;
+        }
+
+        .c {
+            width: 500px; /* Ширина элемента в пикселах */
+            padding: 10px; /* Поля вокруг текста */
+            margin: auto; /* Выравниваем по центру */
+            text-align: center;
+        }
+
+    </style>
 </head>
 <body>
-<form th:method="POST" th:action="@{/api/users/admin}" th:object="${user}">
-    <label for="name">Name: </label>
-    <input type="text" th:field="*{name}" id="name">
-    <br/>
-    <label for="surname">Surname: </label>
-    <input type="text" th:field="*{surname}" id="surname">
-    <br/>
-    <label for="surname">Password </label>
-    <input type="text" th:field="*{password}" id="password">
-    <br/>
-    <label>Select Role(s) </label>
-    <tr th:each="role : ${roles}">
-        <td><input th:type="checkbox"
-                   th:name="${role.role}"
-                   th:value="${role.role}"
-                   th:text="${role.role}"/>
-        </td>
-    </tr>
-    <br/>
-    <input type="submit" value="Add new User">
-</form>
-<form th:action="@{/logout}" method="POST">
-    <input type="submit" value="Logout"/>
-</form>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col left text-left text-light">
+            <p>
+                <b class="font-weight-bold" th:text="${currentUser.name}">username</b>
+                with roles:
+                <th:block th:each="role : ${currentUser.roles}">
+                    <a th:text="${#strings.substringAfter(role.role, 'ROLE_')}">roles</a>
+                </th:block>
+            </p>
+        </div>
+        <div class="col right text-right">
+            <form id="logout" th:action="@{/logout}" method="POST">
+            </form>
+            <button class="btn btn-default" type="submit" form="logout">Logout</button>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-2 user-choice">
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <a th:href="@{/api/users/admin}" class="nav-link" th:classappend="active">Admin</a>
+                    <a th:href="@{/api/users/user}" class="nav-link">User</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-10 main-table">
+            <h1>Admin panel</h1>
+            <div class="container-fluid">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" th:href="@{/api/users/admin}">User table</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab">New user</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-block">
+                    <div class="container-fluid c">
+
+                        <form th:method="POST" th:action="@{/api/users/admin}" th:object="${user}">
+                            <label for="name"><strong>Username</strong></label>
+                            <input type="text" th:field="*{name}" class="form-control" id="name"
+                                   placeholder="username123">
+                            <br/>
+                            <label for="surname"><strong>Surname</strong></label>
+                            <input type="text" th:field="*{surname}" class="form-control" id="surname"
+                                   placeholder="surname">
+                            <br/>
+                            <label for="password"><strong>Password</strong></label>
+                            <input type="text" th:field="*{password}" class="form-control" id="password"
+                                   placeholder="password">
+                            <br/>
+                            <div class="form-group">
+                                <label for="choose-role"><strong>Role</strong></label>
+                                <select multiple class="form-control" size="2" id="choose-role" name="roles1" required>
+                                    <option value="0">USER</option>
+                                    <option value="1">ADMIN</option>
+                                </select>
+                            </div>
+<!--                            <label><strong>Role</strong></label>-->
+<!--                                <select class="form-control" size="3" multiple name="roles1" required>-->
+<!--                                    <option value="0">USER</option>-->
+<!--                                    <option value="1">ADMIN</option>-->
+<!--                                </select>-->
+                            <br/>
+                            <button type="submit" class="btn btn-success">Add new user</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

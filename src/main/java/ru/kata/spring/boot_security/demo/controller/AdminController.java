@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,8 +43,9 @@ public class AdminController {
 
     @GetMapping("/admin/new")
     public String newUser(Model model) {
+        User currentUser = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        model.addAttribute("currentUser", currentUser);
         model.addAttribute("user", new User());
-        model.addAttribute("roles", roleService.setOfRoles());
         return "users/new";
     }
 
@@ -55,12 +57,9 @@ public class AdminController {
 
     @PostMapping("/admin")
     public String create(@ModelAttribute("user") User user
-            , @RequestParam Map<String, String> form) {
-        for (String role : form.keySet()) {
-            if (role.contains("ROLE_")) {
-                user.addRole(roleService.getRole(role));
-            }
-        }
+            , @RequestParam(value = "roles1") Integer role) {
+        System.out.println("---------------------------------" + role);
+        user.addRole(roleService.getRole(role == 1 ? "ROLE_ADMIN" : "ROLE_USER"));
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         userService.add(user);
         return "redirect:/api/users/admin";

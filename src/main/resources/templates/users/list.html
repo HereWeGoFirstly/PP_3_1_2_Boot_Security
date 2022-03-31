@@ -18,15 +18,22 @@
             background-color: #41474c;
         }
 
-        .roles {
-            background-color: #41474c;
+        .main-table {
+            background-color: #f8f9fa;
+            min-height: 100vh;
+        }
+
+        caption {
+
+            caption-side: top;
+            background-color: #f7f7f7;
+            color: black;
         }
     </style>
 
 </head>
-<title>Привет мир!</title>
 <body>
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col left text-left text-light">
             <p>
@@ -38,21 +45,40 @@
             </p>
         </div>
         <div class="col right text-right">
-            <form th:action="@{/logout}" method="POST">
-                <input type="submit" value="Logout"/>
+            <form id="logout" th:action="@{/logout}" method="POST">
             </form>
+            <button class="btn btn-default" type="submit" form="logout">Logout</button>
         </div>
     </div>
 </div>
-<div class="container">
+<div class="container-fluid">
     <div class="row">
-        <div class="col-1">
-            <a th:href="@{/api/users/admin/new}">New User</a>
+        <div class="col-2 user-choice">
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <a th:href="@{/api/users/admin}" class="nav-link" th:classappend="active">Admin</a>
+                    <a th:href="@{/api/users/user}" class="nav-link">User</a>
+                </li>
+            </ul>
         </div>
-        <div class="col-11">
+        <div class="col-10 main-table">
+            <h1>Admin panel</h1>
+            <div class="container-fluid">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" >User table</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" th:href="@{/api/users/admin/new}">New user</a>
+                    </li>
+                </ul>
+            </div>
             <div class="card">
                 <div class="card-block">
-                    <table class="table table-hover">
+                    <table class="table table-striped">
+                        <caption>
+                            <h4>All users</h4>
+                        </caption>
                         <thead>
                         <tr>
                             <th>Id</th>
