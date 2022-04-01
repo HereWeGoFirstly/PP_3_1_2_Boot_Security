@@ -56,9 +56,8 @@ public class AdminController {
     }
 
     @PostMapping("/admin")
-    public String create(@ModelAttribute("user") User user
+    public String create(@ModelAttribute("newuser") User user
             , @RequestParam(value = "roles1") Integer role) {
-        System.out.println("---------------------------------" + role);
         user.addRole(roleService.getRole(role == 1 ? "ROLE_ADMIN" : "ROLE_USER"));
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         userService.add(user);
@@ -75,12 +74,8 @@ public class AdminController {
     @PostMapping("/admin/{id}")
     public String update(@ModelAttribute("user") User user
             , @PathVariable("id") int id
-            , @RequestParam Map<String, String> form) {
-        for (String role : form.keySet()) {
-            if (role.contains("ROLE_")) {
-                user.addRole(roleService.getRole(role));
-            }
-        }
+            , @RequestParam(value = "roles1") Integer role) {
+        user.addRole(roleService.getRole(role == 1 ? "ROLE_ADMIN" : "ROLE_USER"));
         userService.update(id, user);
         return "redirect:/api/users/admin";
     }

@@ -71,19 +71,20 @@
         <div class="col-10 main-table">
             <h1>Admin panel</h1>
             <div class="container-fluid">
-                <ul class="nav nav-tabs">
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" th:href="@{/api/users/admin}">User table</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab">New user</a>
-                    </li>
-                </ul>
+                <a class="btn btn-secondary" th:href="@{/api/users/admin}" role="button">User table</a>
+                <a class="btn btn-outline-secondary" href="#" role="button" disabled="">New user</a>
+<!--                <ul class="nav nav-tabs">-->
+<!--                    <li class="nav-item">-->
+<!--                        <a class="nav-link" data-toggle="tab" th:href="@{/api/users/admin}">User table</a>-->
+<!--                    </li>-->
+<!--                    <li class="nav-item">-->
+<!--                        <a class="nav-link active" data-toggle="tab">New user</a>-->
+<!--                    </li>-->
+<!--                </ul>-->
             </div>
             <div class="card">
                 <div class="card-block">
                     <div class="container-fluid c">
-
                         <form th:method="POST" th:action="@{/api/users/admin}" th:object="${user}">
                             <label for="name"><strong>Username</strong></label>
                             <input type="text" th:field="*{name}" class="form-control" id="name"
@@ -94,21 +95,16 @@
                                    placeholder="surname">
                             <br/>
                             <label for="password"><strong>Password</strong></label>
-                            <input type="text" th:field="*{password}" class="form-control" id="password"
+                            <input type="password" th:field="*{password}" class="form-control" id="password"
                                    placeholder="password">
                             <br/>
                             <div class="form-group">
                                 <label for="choose-role"><strong>Role</strong></label>
                                 <select multiple class="form-control" size="2" id="choose-role" name="roles1" required>
-                                    <option value="0">USER</option>
                                     <option value="1">ADMIN</option>
+                                    <option value="2">USER</option>
                                 </select>
                             </div>
-<!--                            <label><strong>Role</strong></label>-->
-<!--                                <select class="form-control" size="3" multiple name="roles1" required>-->
-<!--                                    <option value="0">USER</option>-->
-<!--                                    <option value="1">ADMIN</option>-->
-<!--                                </select>-->
                             <br/>
                             <button type="submit" class="btn btn-success">Add new user</button>
                         </form>
