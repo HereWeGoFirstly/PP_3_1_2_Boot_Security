@@ -66,6 +66,7 @@ public class AdminController {
 
     @GetMapping("/admin/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
+//        model.addAttribute("editedUser", new User());
         model.addAttribute("user", userService.getUserById(id));
         model.addAttribute("roles", roleService.setOfRoles());
         return "users/edit";
@@ -74,8 +75,14 @@ public class AdminController {
     @PostMapping("/admin/{id}")
     public String update(@ModelAttribute("user") User user
             , @PathVariable("id") int id
-            , @RequestParam(value = "roles1") Integer role) {
+            , @RequestParam(value = "roles1") int role
+            , @RequestParam(value = "nameToEdit") String nameToEdit
+            , @RequestParam(value = "surnameToEdit") String surnameToEdit
+            , @RequestParam(value = "passwordToEdit") String passwordToEdit) {
         user.addRole(roleService.getRole(role == 1 ? "ROLE_ADMIN" : "ROLE_USER"));
+        user.setName(nameToEdit);
+        user.setSurname(surnameToEdit);
+        user.setPassword(new BCryptPasswordEncoder().encode(passwordToEdit));
         userService.update(id, user);
         return "redirect:/api/users/admin";
     }
